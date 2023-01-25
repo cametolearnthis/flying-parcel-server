@@ -1,6 +1,6 @@
 const { Schema, model, default: mongoose } = require("mongoose");
 
-const deliveringSchema = new Schema(
+const deliverySchema = new Schema(
     {
         date: {
             type: Date,
@@ -15,12 +15,10 @@ const deliveringSchema = new Schema(
                 "Evening"
             ]
         },
-        items: [{type: mongoose.Schema.Types.ObjectId, ref: "Item",
-        required: true
-        }],
+        items: [{type: mongoose.Schema.Types.ObjectId, ref: "Item"}],
         warnings: String
     }
 );
 
-module.exports = model("Delivering", deliveringSchema);
+module.exports = model("Delivery", deliverySchema);
 
