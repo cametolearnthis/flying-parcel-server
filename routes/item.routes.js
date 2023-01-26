@@ -70,19 +70,24 @@ router.put("/items/:itemId", (req, res, next) => {
 //DELETE ITEM
 router.delete("/items/:itemId", (req, res, next) => {
   const { itemId } = req.params;
-
+  // const delivery = req.params.delivery;
 
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
-  
+
   Item.findByIdAndRemove(itemId)
-    .populate("delivery")
-    .then((deliveryId) => {
-        return Delivery.findByIdAndUpdate({ deliveryId: req.body._id }, { $pull: { items: deliveryId }})
+    .then((deletedItem) => {
+      return Delivery.findByIdAndUpdate(deletedItem.delivery, {
+        $pull: { items: deletedItem._id },
+      });
+
+      // return Delivery.findByIdAndUpdate({deliveryId: delivery}, { $pull: { items: deletedItem._id }})
     })
-    .then((response) => res.json({ message: `Item with ${itemId} was removed.`, deletedItem }))
+    .then((updatedDelivery) =>
+      res.json({ message: `Item with ${itemId} was removed.`, updatedDelivery })
+    )
     .catch((err) => {
       console.log("error removing item", err);
       res.status(500).json(err);

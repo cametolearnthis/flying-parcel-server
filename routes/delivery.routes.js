@@ -17,4 +17,27 @@ router.post('/deliveries', (req, res, next) => {
 })
 
 
+
+router.delete("/deliveries/:deliveryId", (req, res, next) => {
+    const { deliveryId } = req.params;
+  
+    if (!mongoose.Types.ObjectId.isValid(deliveryId)) {
+      res.status(400).json({ message: "Specified id is not valid" });
+      return;
+    }
+  
+    Delivery.findByIdAndRemove(deliveryId)
+      .then((deletedDelivery) => {
+        return Item.deleteMany({ _id: { $in: deletedDelivery.items } });
+      })
+      .then(() =>
+        res.json({
+          message: `Delivery with id ${deliveryId} & all associated tasks were removed successfully.`,
+        })
+      )
+      .catch((err) => {
+        console.log("error deleting delivery", err);
+        res.status(500).json(err);
+      });
+  });
 module.exports = router;
