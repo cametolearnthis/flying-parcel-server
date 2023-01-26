@@ -2,6 +2,10 @@ const { Schema, model, default: mongoose } = require("mongoose");
 
 const deliverySchema = new Schema(
     {
+        delivererName: {
+            type: String,
+            required: [true, "Each delivery route must be assigned to a deliverer"]
+        },
         date: {
             type: Date,
             required: true,

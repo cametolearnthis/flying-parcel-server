@@ -31,7 +31,7 @@ router.get("/items", (req, res, next) => {
       res.status(500).json(err);
     });
 });
-module.exports = router;
+
 
 //GET A SINGLE ITEM
 router.get("/items/:itemId", (req, res, next) => {
@@ -83,7 +83,6 @@ router.delete("/items/:itemId", (req, res, next) => {
         $pull: { items: deletedItem._id },
       });
 
-      // return Delivery.findByIdAndUpdate({deliveryId: delivery}, { $pull: { items: deletedItem._id }})
     })
     .then((updatedDelivery) =>
       res.json({ message: `Item with ${itemId} was removed.`, updatedDelivery })
