@@ -32,6 +32,7 @@ const itemSchema = new Schema({
     type: Boolean, 
     default: false,
   }, 
+  incidents: String,
   delivery: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Delivery',

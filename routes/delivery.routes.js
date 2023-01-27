@@ -7,6 +7,8 @@ const Item = require("../models/Item.model");
 router.post("/deliveries", (req, res, next) => {
   const { delivererName, date, shift } = req.body;
 
+  console.log(creator)
+
   Delivery.create({ delivererName, date, shift, items: [] })
     .then((response) => res.json(response))
     .catch((err) => {
@@ -43,6 +45,7 @@ router.get("/deliveries/:deliveryId", (req, res, next) => {
     });
 });
 
+//DELETE A DELIVERY
 router.delete("/deliveries/:deliveryId", (req, res, next) => {
   const { deliveryId } = req.params;
 

@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 
 const Item = require("../models/Item.model");
 const Delivery = require("../models/Delivery.model");
+const isManager = require("../middleware/isManager");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 //POST A NEW ITEM
 router.post("/items", (req, res, next) => {
-  const { product, name, address, code, delivered, deliveryId } = req.body;
+  const { product, name, address, code, delivered, incidents, deliveryId } = req.body;
 
-  Item.create({ product, name, address, code, delivered, delivery: deliveryId })
+  Item.create({ product, name, address, code, delivered, incidents, delivery: deliveryId })
     .then((newItem) => {
       return Delivery.findByIdAndUpdate(deliveryId, {
         $push: { items: newItem._id },
@@ -22,7 +24,7 @@ router.post("/items", (req, res, next) => {
 });
 
 //GET ALL THE ITEMS
-router.get("/items", (req, res, next) => {
+router.get("/items", isAuthenticated, isManager, (req, res, next) => {
   Item.find()
     .populate("delivery")
     .then((allItems) => res.json(allItems))
