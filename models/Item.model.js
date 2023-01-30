@@ -28,15 +28,19 @@ const itemSchema = new Schema({
     required: [true, "You must provide the postal code"],
     trim: true
   },
-  delivered: {
-    type: Boolean, 
-    default: false,
-  }, 
-  incidents: String,
   delivery: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Delivery',
     required: [true, "This item must be assigned to a delivery route"],
+  },
+  result: {
+    type: String,
+    enum: [
+      "Delivered",
+      "Not delivered",
+      "Undefined"
+    ], 
+    default: "Undefined",
   }
 });
 
