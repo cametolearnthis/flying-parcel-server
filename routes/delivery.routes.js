@@ -4,7 +4,8 @@ const User = require("../models/User.model");
 const Delivery = require("../models/Delivery.model");
 const Item = require("../models/Item.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
-const isCreator = require("../middleware/isCreator");
+const isManager = require("../middleware/isManager")
+
 
 
 
@@ -34,14 +35,26 @@ router.get("/deliveries", isAuthenticated, (req, res, next) => {
   const userId = req.payload._id;
 
   
-
-  Delivery.find({creator: userId})
+  if (req.payload.isManager === true) {
+    Delivery.find()
     .populate("items")
     .then((allDeliveries) => res.json(allDeliveries))
     .catch((err) => {
       console.log("error getting the deliveries", err);
       res.status(500).json(err);
     });
+  } else {
+    Delivery.find({creator: userId})
+    .populate("items")
+    .then((allDeliveries) => res.json(allDeliveries))
+    .catch((err) => {
+      console.log("error getting the deliveries", err);
+      res.status(500).json(err);
+    });
+  }
+
+
+
 });
 
 //GET A SINGLE DELIVERY
