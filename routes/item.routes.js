@@ -9,7 +9,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 //POST A NEW ITEM
 router.post("/items", (req, res, next) => {
   const { product, name, address, code, delivered, incidents, deliveryId } = req.body;
-
+  // const { creator } = req.default
   Item.create({ product, name, address, code, delivered, incidents, delivery: deliveryId })
     .then((newItem) => {
       return Delivery.findByIdAndUpdate(deliveryId, {

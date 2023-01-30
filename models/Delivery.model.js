@@ -20,7 +20,10 @@ const deliverySchema = new Schema(
             ]
         },
         items: [{type: mongoose.Schema.Types.ObjectId, ref: "Item"}],
-        warnings: String
+        warnings: String,
+        creator:  {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'},
     }
 );
 
