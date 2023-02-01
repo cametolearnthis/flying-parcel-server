@@ -33,14 +33,14 @@ const itemSchema = new Schema({
     ref: 'Delivery',
     required: [true, "This item must be assigned to a delivery route"],
   },
-  result: {
+  status: {
     type: String,
     enum: [
-      "Delivered",
-      "Not delivered",
-      "Undefined"
+      "delivered",
+      "not-delivered",
+      "pending"
     ], 
-    default: "Undefined",
+    default: "pending",
   }
 });
 
