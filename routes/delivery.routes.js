@@ -4,7 +4,6 @@ const User = require("../models/User.model");
 const Delivery = require("../models/Delivery.model");
 const Item = require("../models/Item.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
-const isManager = require("../middleware/isManager")
 
 
 
@@ -14,11 +13,18 @@ router.post("/deliveries", isAuthenticated, (req, res, next) => {
   // const { delivererName, date, shift, creator } = req.body;
 
   const deliveryDetails = {
-    delivererName: req.body.delivererName,
     date: req.body.date,
     shift: req.body.shift,
     items: req.body.items,
-    creator: req.payload._id
+
+  }
+
+  if (req.payload.isManager) {
+    deliveryDetails.delivererName = req.body.delivererName
+    deliveryDetails.creator = req.body.creator
+  } else {
+    deliveryDetails.delivererName = req.payload.name
+    deliveryDetails.creator = req.payload._id
   }
 
   Delivery.create(deliveryDetails)
@@ -73,6 +79,45 @@ router.get("/deliveries/:deliveryId", isAuthenticated, (req, res, next) => {
       res.status(500).json(err);
     });
 });
+
+//GET LIST OF USERS
+router.get("/users", isAuthenticated, (req, res, next) => {
+
+  User.find({ isManager: false }).select('_id, name')
+    .then((users) => res.status(200).json(users))
+
+    .catch((err) => {
+      console.log("error getting users from DB", err);
+      res.status(500).json(err);
+    });
+});
+
+//GET LIST OF USERS & SINGLE DELIVERY
+router.get("/users/:deliveryId", isAuthenticated, (req, res, next) => {
+  const { deliveryId } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(deliveryId)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+let users
+
+  User.find({ isManager: false }).select('_id, name')
+    .then((usersList) => {
+      users = usersList
+      return Delivery.findById(deliveryId)
+      .populate("items")
+    }) 
+  
+    .then((deliveryDetails) => res.status(200).json( { deliveryDetails, users } ))
+
+    .catch((err) => {
+      console.log("error getting delivery from DB", err);
+      res.status(500).json(err);
+    });
+});
+
 
 //PUT SINGLE DELIVERY
 router.put("/deliveries/:deliveryId", (req, res, next) => {
