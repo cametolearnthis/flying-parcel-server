@@ -19,7 +19,7 @@ const userSchema = new Schema(
       required: [true, "Name is required."],
     },
     isManager: {
-      type: Boolean, 
+      type: Boolean,
       default: false,
     },
   },

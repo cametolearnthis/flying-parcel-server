@@ -41,7 +41,8 @@ const itemSchema = new Schema({
       "pending"
     ], 
     default: "pending",
-  }
+  },
+  imageUrl: String
 });
 
 module.exports = model("Item", itemSchema);
