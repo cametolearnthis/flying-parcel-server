@@ -7,7 +7,7 @@ REST API from a MERN delivery app.
 
 - With this repo you are going to implement the backend REST API (Express & MongoDB).
 
-- You can find a repository with the frontend (in a React App) here: [https://github.com/cametolearnthis/flying-parcel-server]
+- You can find a repository with the frontend (in a React App) here: [https://github.com/cametolearnthis/flying-parcel-client]
 
 ## Instructions
 
